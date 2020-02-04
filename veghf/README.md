@@ -86,7 +86,7 @@ Once loaded, there are 3 objects:
   - `"VEGHFAGEclass"`: current veg + HF labels (includes stand age)
   - `"SOILclass"`: reference soil classes
   - `"SOILHFclass"`: current soil + HF classes
-* `d_wide`: wide format summaries, a list with 5 elements:
+* `d_wide`: wide format summaries (can be `NULL` when `AREA = FALSE`), a list with 5 elements:
   - `"veg_current"`: UID x veg/HF labels sparse matrix, cell values are areas
   - `"veg_reference"`: UID x veg labels sparse matrix, cell values are areas
   - `"soil_current"`: UID x soil/HF labels sparse matrix, cell values are areas
