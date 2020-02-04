@@ -50,6 +50,10 @@ if (interactive()) {
   ## the summaries as a reminder
   COMMENTS   = ""
 
+  ## tolerance level for excluding unknown aged harvest areas
+  ## 0 means no tolerance, 1 means it is OK to exlude all the landbase
+  TOL        = 0
+
 } else {
   source(commandArgs(trailingOnly = TRUE)[1L])
 }

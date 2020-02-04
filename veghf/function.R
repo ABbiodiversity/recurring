@@ -60,7 +60,7 @@ make_char2fact <- function(x) {
 make_vegHF_wide_v6 <-
 function(d, col.label, col.year=NULL, col.HFyear=NULL,
 col.HABIT=NULL, col.SOIL=NULL, wide=TRUE, sparse=FALSE,
-HF_fine=TRUE, widen_only=FALSE) {
+HF_fine=TRUE, widen_only=FALSE, tol=0) {
 
     TreedClassesCC <- c("Decid", "Mixedwood", "Pine", "Spruce")
     TreedClasses   <- c(TreedClassesCC, "TreedBog", "TreedFen", "TreedSwamp")
@@ -312,9 +312,15 @@ HF_fine=TRUE, widen_only=FALSE) {
     ## soils (`current`, soil + HF)
     SoilCr <- Xtab(Shape_Area ~ LABEL + SOILHFclass, d)
 
-    ## removing unknown aged forest harvest
-    sum(VegCr[,startsWith(colnames(VegCr), "CC") & endsWith(colnames(VegCr), "0")])
-    VegCr <- VegCr[,!(startsWith(colnames(VegCr), "CC") & endsWith(colnames(VegCr), "0"))]
+    ## removing unknown aged forest harvest within tolerance level
+    if (TOL > 0) {
+      CC0 <- sum(VegCr[,startsWith(colnames(VegCr), "CC") & endsWith(colnames(VegCr), "0")])
+      CC0 <- CC0 / sum(VegCr)
+      if (CC0 > 0)
+        cat("Unknown age CC found: ", round(100*CC0,4), "%\n", sep="")
+      if (CC0 <= tol)
+        VegCr <- VegCr[,!(startsWith(colnames(VegCr), "CC") & endsWith(colnames(VegCr), "0"))]
+    }
 
     if (!all(colnames(VegRf) %in% RfLab)) {
         cat(colnames(VegRf)[!(colnames(VegRf) %in% RfLab)], sep="\n")
@@ -442,7 +448,7 @@ d_long <- try(make_vegHF_wide_v6(d,
     col.HFyear="YEAR",
     col.HABIT=VEG_COL,
     col.SOIL="Soil_Type_1",
-    sparse=TRUE, HF_fine=TRUE, wide=FALSE), silent=TRUE)
+    sparse=TRUE, HF_fine=TRUE, wide=FALSE, tol=TOL), silent=TRUE)
 if (inherits(d_long, "try-error")) {
   cat("ERROR\n\n")
   stop(paste("Check your settings\n", d_long))
@@ -457,7 +463,7 @@ if (AREA) {
       col.HFyear="YEAR",
       col.HABIT="Combined_ChgByCWCS",
       col.SOIL="Soil_Type_1",
-      sparse=TRUE, HF_fine=TRUE, widen_only=TRUE)
+      sparse=TRUE, HF_fine=TRUE, widen_only=TRUE, tol=TOL)
   ## wide format summary with unknown age area redistributed
   cat("OK\n\nRedistributing unknown ages:\n\n")
   dx <- nonDuplicated(d, d[[UID_COL]], TRUE)[rownames(d_wide0[[1]]),]

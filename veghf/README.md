@@ -40,6 +40,7 @@ AREA_COL   = "Shape_Area"
 AREA       = TRUE
 OUTPUT     = NULL
 COMMENTS   = "NWSAR Reporting - veg+hf veg+vhf3by7 // 2020-01-30"
+TOL        = 0
 
 od <- setwd("~/repos/recurring/veghf")
 source("function.R")
@@ -107,6 +108,7 @@ BASE_YR    = 2017
 AREA_COL   = "Shape_Area"
 AREA       = TRUE
 OUTPUT     = NULL
+TOL        = 0
 
 TABLES <- c("SC_Caribou_Range_Vegetation_HFI2017_rawdata",
   "SC_LAND_USE_FRAMEWORK_Vegetation_HFI2017_rawdata",
@@ -175,6 +177,9 @@ Rscript --vanilla index.R settings.R
   of the input (backfilled v6.1 + 2017 HFI) when it is
   not trivial from file name, or describe purpose of
   the summaries as a reminder
+* `TOL`:
+  tolerance level for excluding unknown aged harvest areas:
+  0 means no tolerance, 1 means it is OK to exlude all the landbase.
 
 ## Output
 

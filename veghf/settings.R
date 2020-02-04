@@ -46,3 +46,7 @@ AREA       = TRUE
 ## not trivial from file name, or describe purpose of
 ## the summaries as a reminder
 COMMENTS   = ""
+
+## tolerance level for excluding unknown aged harvest areas
+## 0 means no tolerance, 1 means it is OK to exlude all the landbase
+TOL        = 0
