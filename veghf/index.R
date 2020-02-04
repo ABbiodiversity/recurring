@@ -11,7 +11,7 @@ if (interactive()) {
   AREA_COL   = "Shape_Area"
 
   ## base year for surveys or HF inventory
-  ## this is used to calculate years since last disturbence
+  ## this is used to calculate years since last disturbance
   ## (i.e. base year - origin year)
   ## use a numeric value when it is the same for each record
   ## use a character value to indicate a field when it

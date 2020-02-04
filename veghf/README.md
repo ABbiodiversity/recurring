@@ -1,9 +1,9 @@
-# Vieg/soil/HF processing
+# Veg/soil/HF processing
 
 This script takes input as the attributes from the backfilled veg/soil/HF data
 and produces output in long and wide format (also deals with unknown ages).
 
-## How to ge it
+## How to get it
 
 Clone this repo or download as a zip file and extract.
 Now you can use the `/veghf` folder as required.
@@ -93,7 +93,7 @@ If you run into any issues, read the error message, use `traceback()`, etc.
 If you need to add new HF feature type to the lookup table,
 please submit a PR so we all have the same lookup table.
 
-Here is a script that goes over multiple lables fron the same SQLite database:
+Here is a script that goes over multiple tables from the same SQLite database:
 
 ``` R
 od <- setwd("~/repos/recurring/veghf")
@@ -127,7 +127,7 @@ setwd(od)
 
 ### Non-interactive use
 
-`cd` into the folder, then run the R scipt in a vanilla session, 
+`cd` into the folder, then run the R script in a vanilla session, 
 passing the settings file name as the only argument.
 We use `settings.R` here but you can rename it to anything 
 that makes sense for a project, this way storing multiple settings files:
@@ -144,7 +144,7 @@ Rscript --vanilla index.R settings.R
 * `AREA_COL`: field name for shape area when `AREA = TRUE` (usually `"Shape_Area"` but sometimes `"Area_m2"`)
 * `BASE_YR`:
   base year for surveys or HF inventory
-  this is used to calculate years since last disturbence
+  this is used to calculate years since last disturbance
   (i.e. base year - origin year)
   use a numeric value when it is the same for each record
   use a character value to indicate a field when it
@@ -186,7 +186,7 @@ load("output-file-name.RData")
 
 Once loaded, there are 3 objects:
 
-* `d_long`: this is a data frame with same fields as the input with some new fields added, the most importan ones are:
+* `d_long`: this is a data frame with same fields as the input with some new fields added, the most important ones are:
   - `"VEGAGEclass"`: reference labels based on backfilled veg (includes stand age)
   - `"VEGHFAGEclass"`: current veg + HF labels (includes stand age)
   - `"SOILclass"`: reference soil classes
