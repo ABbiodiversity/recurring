@@ -1,8 +1,14 @@
 ## provide settings here when using in interactive mode
 if (interactive()) {
 
-    ## unique ID (can be all the same value)
+  ## unique ID (can be all the same value)
   UID_COL    = "ABMI_ID_Wi"
+
+  ## vegetation column
+  VEG_COL    = "Combined_ChgByCWCS"
+
+  ## shape area when AREA=TRUE
+  AREA_COL   = "Shape_Area"
 
   ## base year for surveys or HF inventory
   ## this is used to calculate years since last disturbence

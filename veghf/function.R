@@ -1,3 +1,4 @@
+cat("\n\nVEGHF processing started\n")
 ## install required species if needed
 if (!requireNamespace("mefa4"))
   install.packages("mefa4")
@@ -7,10 +8,12 @@ if (!requireNamespace("RSQLite"))
   install.packages("RSQLite")
 
 ## load required packages
+cat("\nLoading packages:\n")
 library(mefa4)
 library(DBI)
 library(RSQLite)
 
+cat("\nLoading objects ... ")
 ## reclass for natural veg
 recl <- structure(list(V6_COMB = structure(1:30, .Label = c("Alkali",
   "AlpineLarch", "Bare", "Conif", "Decid", "Fir", "GraminoidFen",
@@ -40,6 +43,7 @@ rownames(hflt) <- hftypes$FEATURE_TY
 load("ages-by-nsr.Rdata")
 
 ## functions
+cat("OK\n\nLoading functions ... ")
 
 ## SQL tables represent character not factor
 make_char2fact <- function(x) {
@@ -401,30 +405,47 @@ fill_in_0ages_v6 <- function(x, NSR, ages_list, rm0=TRUE) {
 
 ## read in data
 if (endsWith(tolower(FILE), ".csv")) {
+  cat("OK\n\nReading CSV file:\n", FILE, "... ")
   d <- read.csv(FILE)
 } else {
+  cat("OK\n\nConnecting to SQLite database:\n", FILE)
   db <- dbConnect(RSQLite::SQLite(), FILE)
-  dbListTables(db)
+  cat("\n\nFound the following tables:\n")
+  cat(paste(dbListTables(db), collapse="\n"))
+  cat("\n\nLoading table:\n", TABLE)
   d <- dbReadTable(db, TABLE)
+  cat("\n\nDisconnecting ... ")
   dbDisconnect(db)
   d <- make_char2fact(d)
 }
 
 ## take a subset if needed
 if (!is.null(SUB_COL)) {
+  cat("OK\n\nTaking subset ... ")
   d <- d[d[[SUB_COL]] %in% SUB_VAL,]
 }
 
+if (AREA_COL != "Shape_Area") {
+  d[["Shape_Area"]] <- d[[AREA_COL]]
+  d[[AREA_COL]] <- NULL
+}
+
 ## long format summary
-d_long <- make_vegHF_wide_v6(d,
+cat("OK\n\nProcessing long format summaries ... ")
+d_long <- try(make_vegHF_wide_v6(d,
     col.label=UID_COL,
     col.year=BASE_YR,
     col.HFyear="YEAR",
-    col.HABIT="Combined_ChgByCWCS",
+    col.HABIT=VEG_COL,
     col.SOIL="Soil_Type_1",
-    sparse=TRUE, HF_fine=TRUE, wide=FALSE)
+    sparse=TRUE, HF_fine=TRUE, wide=FALSE), silent=TRUE)
+if (inherits(d_long, "try-error")) {
+  cat("ERROR\n\n")
+  stop(paste("Check your settings\n", d_long))
+}
 ## do not do this when Shape_Area is missing
 if (AREA) {
+  cat("OK\n\nProcessing wide format summaries ... ")
   ## wide format summary with >=0 unknown age area
   d_wide0 <- make_vegHF_wide_v6(d_long,
       col.label=UID_COL,
@@ -434,9 +455,11 @@ if (AREA) {
       col.SOIL="Soil_Type_1",
       sparse=TRUE, HF_fine=TRUE, widen_only=TRUE)
   ## wide format summary with unknown age area redistributed
+  cat("OK\n\nRedistributing unknown ages:\n\n")
   dx <- nonDuplicated(d, d[[UID_COL]], TRUE)[rownames(d_wide0[[1]]),]
   d_wide <- fill_in_0ages_v6(d_wide0, dx$NSRNAME, ages_list)
 } else {
+  cat("OK\n\nSkipping wide format summaries")
   d_wide <- NULL
 }
 
@@ -463,5 +486,6 @@ if (is.null(OUTPUT)) {
 )
 
 ## save output
+cat("\n\nSaving results:\n", OUTPUT)
 save(d_long, d_wide, .veghf_settings, file=OUTPUT)
-
+cat("\n\nDONE\n\n")

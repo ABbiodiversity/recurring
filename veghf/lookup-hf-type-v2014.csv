@@ -202,3 +202,4 @@ WELL-WATER-ABAND,WellSite,,WellSite,,,,VerifiedHF,
 WINDMILL,WindGenerationFacility,,WindGenerationFacility,,,,WetlandBuffer,
 WINDMILLS,WindGenerationFacility,,WindGenerationFacility,,,,W2W_HF2014,"Wind turbines, operational or former, visible on imagery. Digitized to represent original land disturbance from construction."
 WINTER_ROAD,RoadTrailVegetated,,RoadTrailVegetated,,,,WetlandBuffer,
+ROUGH-PASTURE,CultivationCropPastureBareground,CultivationRoughPasture,CultivationRoughPasture,,Use it as Cultivation only?,,3x7verified,Land cleared of vegetation with no ground breakage. No tilling or seeding has taken place historically. May have few shrubs and trees present.

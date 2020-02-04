@@ -37,6 +37,8 @@ Rscript --vanilla index.R settings.R
 ### Settings
 
 * `UID_COL`: unique ID (can be all the same value)
+* `VEG_COL`: vegetation column (usually `"Combined_ChgByCWCS"` but sometimes `"Vegetation"`)
+* `AREA_COL`: field name for shape area when `AREA = TRUE` (usually `"Shape_Area"` but sometimes `"Area_m2"`)
 * `BASE_YR`:
   base year for surveys or HF inventory
   this is used to calculate years since last disturbence
