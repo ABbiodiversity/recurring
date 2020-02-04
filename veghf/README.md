@@ -36,36 +36,36 @@ Rscript --vanilla index.R settings.R
 
 ### Settings
 
-* `"UID_COL"`: unique ID (can be all the same value)
-* `"BASE_YR"`:
+* `UID_COL`: unique ID (can be all the same value)
+* `BASE_YR`:
   base year for surveys or HF inventory
   this is used to calculate years since last disturbence
   (i.e. base year - origin year)
   use a numeric value when it is the same for each record
   use a character value to indicate a field when it
   varies by record
-* `"FILE"`:
+* `FILE`:
   input file name, can contain the path (i.e. /dir/file.csv)
   file type can be .csv or .sqlite
-* `"TABLE"`:
+* `TABLE`:
   table name for SQLite database
   ignored for csv files
-* `"SUB_COL"`:
+* `SUB_COL`:
   optional, field name to be used for subsetting
   can be NULL (ignored)
-* `"SUB_VAL"`:
+* `SUB_VAL`:
   values in the <SUB_COL> field to keep
   can be a single value or a character vector
-* `"OUTPUT"`:
+* `OUTPUT`:
   optional, the name of the output file
   it can contain path as well (e.g. /dir/file.RData)
   if NULL, <FILE>_YYYY-MM-DD.RData is used
-* `"AREA"`:
+* `AREA`:
   keep as TRUE when a Shape_Area field is present
   (long and wide format summaries can be calculated)
   set it to FALSE when e.g. doing point intersections
   (only long summary can be calculated)
-* `"COMMENTS"`:
+* `COMMENTS`:
   add comments here, e.g. describing the characteristics
   of the input (backfilled v6.1 + 2017 HFI) when it is
   not trivial from file name, or describe purpose of
