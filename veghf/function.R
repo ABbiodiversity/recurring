@@ -30,7 +30,7 @@ load("ages-by-nsr.Rdata")
 
 ## functions
 
-#' SQL tables represent character not factor
+## SQL tables represent character not factor
 make_char2fact <- function(x) {
     if (is.null(dim(x)))
         if (is.character(x))
@@ -41,7 +41,7 @@ make_char2fact <- function(x) {
         x
 }
 
-## HF_fine T=use 2014 classification, F=use previous
+## this function processes the input data
 make_vegHF_wide_v6 <-
 function(d, col.label, col.year=NULL, col.HFyear=NULL,
 col.HABIT=NULL, col.SOIL=NULL, wide=TRUE, sparse=FALSE,
@@ -152,25 +152,9 @@ HF_fine=TRUE, widen_only=FALSE) {
 
         #### HABIT/EC classes:
         ## follow HABIT/EC classes, but there are few oddities when outside of AVI
-        #d$VEGclass <- d$EC_Type
         d$VEGclass <- d$HABIT
-    #    levels(d$VEGclass)[levels(d$VEGclass) == "Non-Veg"] <- "NonVeg"
-    #    levels(d$VEGclass) <- gsub("/", "", levels(d$VEGclass))
-
         if (length(setdiff(d$VEGclass, HLEVS)) > 0)
             stop(paste("check HABIT classes", setdiff(d$VEGclass, HLEVS)))
-        #tb <- cbind(c("", HLEVS), c("", HLEVS))
-    #return(setdiff(levels(d$VEGclass), tb[,1]))
-        #levels(d$VEGclass) <- tb[match(levels(d$VEGclass), tb[,1]),2]
-
-        #tmp <- aggregate(d$Shape_Area, list(lcc=d$EC_Type), sum)
-        #tmp$p <- round(100*tmp$x/sum(tmp$x),2)
-        #tmp2 <- aggregate(d$Shape_Area, list(lcc=d$VEGclass), sum)
-        #tmp2$p <- round(100*tmp2$x/sum(tmp2$x),2)
-
-
-    #    NontreedClasses <- setdiff(levels(d$VEGclass), TreedClasses)
-    #    NontreedClasses <- NontreedClasses[NontreedClasses != ""]
 
         #### Age info for backfilled (Rf) and current (Cr)
         ## reference age class 0=no age (either not forest or no info)
@@ -185,11 +169,6 @@ HF_fine=TRUE, widen_only=FALSE) {
         ## placeholder for recent burn (0-9 years)
         tmp <- as.integer(sign(d$ORIGIN_YEAR) * (1 + floor((d$SampleYear - d$ORIGIN_YEAR) / 10)))
         d$AgeRf[tmp == 1L] <- 999L
-        ## set 0 year in treed habitats as max (assumed old forest)
-    #    d$AgeRf[d$AgeRf == 0L & d$VEGclass %in% TreedClasses] <- 9L
-        ## unknown age is set to 0
-        #table(d$AgeRf, d$VEGclass, useNA="a") # check NA ORIGIN_YEAR values
-        #d$AgeRf[is.na(d$AgeRf)] <- 0L
 
         ## incorporate HF year for cutblocks
         d$CC_ORIGIN_YEAR <- d$ORIGIN_YEAR
@@ -212,13 +191,6 @@ HF_fine=TRUE, widen_only=FALSE) {
         #d$AgeCr[is.na(d$AgeCr)] <- 0L
         #table(d$AgeCr,useNA="a")
 
-        ## correcting reference age class based on cutblock info:
-        ## these happened as a result of backfilling, so we accept HF age instead
-        ## but this should be rare (ref age must be >= current)
-        #ii <- !is.na(d$AgeCr) & d$AgeCr > d$AgeRf & d$AgeCr < 999L
-        #if (sum(ii)>0)
-        #    warning(paste("AgeCr > AgeRf for this many cases:", sum(ii)))
-        #d$AgeRf[ii] <- d$AgeCr[ii]
         d$AgeRf[is.na(d$AgeRf)] <- 0L
         #table(rf=d$AgeRf,cr=d$AgeCr,useNA="a")
         ## turning age values into factor:
@@ -272,23 +244,8 @@ HF_fine=TRUE, widen_only=FALSE) {
         if (sum(ii) > 0)
             d$VEGHFclass[ii] <- paste0("CC", as.character(d$VEGclass[ii]))
 
-        ## labels where backfilled cutblock label is not forested habitat
-        ## right now I just collapse them to see % of the areas
-        ## it is usually < 10% at this scale so it might be safe to ignore them
-        ## usually young ages, but ranges R-1-2-3
-        #ii <- unlist(lapply(paste0("CC", NontreedClasses), grep, x=levels(d$VEGHFclass)))
-        #levels(d$VEGHFclass)[ii] <- "CCOpenTypes"
-        ## unknown types under 'CC' considered as 'CCOpenTypes'
-        #levels(d$VEGHFclass)[levels(d$VEGHFclass) == "CC"] <- "CCOpenTypes"
-        ## treed wetlands
-        #ii <- unlist(lapply(paste0("CC", TreedWetClasses), grep, x=levels(d$VEGHFclass)))
-        #levels(d$VEGHFclass)[ii] <- "CCWetTypes"
-
         ## current VEG + HF + Age labels:
         d$VEGHFAGEclass <- interaction(d$VEGHFclass, d$AgeCr, drop=TRUE, sep="", lex.order=TRUE)
-        ## labels with 0 age category are also to be fixed later ------> hard stuff
-        #ii <- unlist(lapply(paste0(TreedClasses, 0), grep, x=levels(d$VEGHFAGEclass)))
-        #levels(d$VEGHFAGEclass)[ii] <- "CCproblem"
         ## Labels for output columns
         levels(d$VEGHFAGEclass) <- c(levels(d$VEGHFAGEclass), setdiff(AllLabels, levels(d$VEGHFAGEclass)))
 
@@ -367,10 +324,6 @@ HF_fine=TRUE, widen_only=FALSE) {
         veg_reference=VegRf,
         soil_current=SoilCr,
         soil_reference=SoilRf)
-#        rs_veg_current=structure(as.integer(rsVegCr), names=names(rsVegCr)),
-#        rs_veg_reference=structure(as.integer(rsVegRf), names=names(rsVegRf)),
-#        rs_soil_current=structure(as.integer(rsSoilCr), names=names(rsSoilCr)),
-#        rs_soil_reference=structure(as.integer(rsSoilRf), names=names(rsSoilRf)))
     if (!sparse)
         out <- lapply(out, as.matrix)
 
@@ -383,54 +336,54 @@ HF_fine=TRUE, widen_only=FALSE) {
     out
 }
 
+## this function redistributes unknown ages in wide form summaries
 fill_in_0ages_v6 <- function(x, NSR, ages_list, rm0=TRUE) {
-    Target <- names(ages_list)
-
-    Ages <- c("0", "R", as.character(1:9))
-    NSR <- droplevels(as.factor(NSR))
-    NSRs <- levels(NSR)
-    for (current in c(TRUE, FALSE)) {
-        xx <- if (current)
-            x$veg_current else x$veg_reference
-        xx <- as.matrix(xx)
-        ag <- if (current)
-            AvgAgesNSROld$current else AvgAgesNSROld$reference
-        ag2 <- if (current)
-            AvgAgesAllOld$current else AvgAgesAllOld$reference
-        for (nsr in NSRs) {
-            cat(ifelse(current, "current:", "reference:"), nsr)
-            flush.console()
-            for (i in Target) {
-                Cols <- paste0(i, Ages)
-                j <- NSR == nsr
-                if (any(j)) {
-                    p0 <- ag[[i]][nsr,]
-                    if (sum(p0) == 0)
-                        p0 <- ag2[[i]]
-                    Mat <- xx[j, Cols, drop=FALSE]
-                    Mat0 <- Mat
-                    ## multiply Mat[,1] (unknown age) with this matrix
-                    Unk <- Mat[,1] * t(matrix(p0, length(Ages), sum(j)))
-                    Mat[,1] <- 0 # will be 0 and redistributed from Unk
-                    Mat <- Mat + Unk
-                    xx[j, Cols] <- Mat # ridiculously slow as sparse matrix
-                    if (sum(Mat0)-sum(Mat) > 10^-6)
-                        cat("\n\ttype:", i, "| diff =", round((sum(Mat0)-sum(Mat))/10^6))
-                }
-            }
-            cat(" --- OK\n")
+  Target <- names(ages_list)
+  Ages <- c("0", "R", as.character(1:9))
+  NSR <- droplevels(as.factor(NSR))
+  NSRs <- levels(NSR)
+  for (current in c(TRUE, FALSE)) {
+    xx <- if (current)
+      x$veg_current else x$veg_reference
+    xx <- as.matrix(xx)
+    ag <- if (current)
+      AvgAgesNSROld$current else AvgAgesNSROld$reference
+    ag2 <- if (current)
+      AvgAgesAllOld$current else AvgAgesAllOld$reference
+    for (nsr in NSRs) {
+      cat(ifelse(current, "current:", "reference:"), nsr)
+      flush.console()
+      for (i in Target) {
+        Cols <- paste0(i, Ages)
+        j <- NSR == nsr
+        if (any(j)) {
+          p0 <- ag[[i]][nsr,]
+          if (sum(p0) == 0)
+            p0 <- ag2[[i]]
+          Mat <- xx[j, Cols, drop=FALSE]
+          Mat0 <- Mat
+          ## multiply Mat[,1] (unknown age) with this matrix
+          Unk <- Mat[,1] * t(matrix(p0, length(Ages), sum(j)))
+          Mat[,1] <- 0 # will be 0 and redistributed from Unk
+          Mat <- Mat + Unk
+          xx[j, Cols] <- Mat # ridiculously slow as sparse matrix
+          if (sum(Mat0)-sum(Mat) > 10^-6)
+            cat("\n\ttype:", i, "| diff =", round((sum(Mat0)-sum(Mat))/10^6))
         }
-        if (current) {
-            x$veg_current <- as(xx, "dgCMatrix")
-        } else {
-            x$veg_reference <- as(xx, "dgCMatrix")
-        }
+      }
+      cat(" --- OK\n")
     }
-    if (rm0) {
-        excl <- c("Decid0", "Mixedwood0", "Pine0", "Spruce0", "TreedBog0", "TreedFen0",
-            "TreedSwamp0", "CutBlocks")
-        x$veg_current <- x$veg_current[,!(colnames(x$veg_current) %in% excl)]
-        x$veg_reference <- x$veg_reference[,!(colnames(x$veg_reference) %in% excl)]
+    if (current) {
+      x$veg_current <- as(xx, "dgCMatrix")
+    } else {
+      x$veg_reference <- as(xx, "dgCMatrix")
     }
-    x
+  }
+  if (rm0) {
+    excl <- c("Decid0", "Mixedwood0", "Pine0", "Spruce0", "TreedBog0", "TreedFen0",
+      "TreedSwamp0", "CutBlocks")
+    x$veg_current <- x$veg_current[,!(colnames(x$veg_current) %in% excl)]
+    x$veg_reference <- x$veg_reference[,!(colnames(x$veg_reference) %in% excl)]
+  }
+  x
 }

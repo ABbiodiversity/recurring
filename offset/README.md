@@ -1,0 +1,1 @@
+# Bird detectability offsets
