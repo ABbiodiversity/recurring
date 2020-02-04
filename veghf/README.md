@@ -81,7 +81,7 @@ load("output-file-name.RData")
 
 Once loaded, there are 3 objects:
 
-* `d_long`: this is a data frame with some new fields:
+* `d_long`: this is a data frame with same fields as the input with some new fields added, the most importan ones are:
   - `"VEGAGEclass"`: reference labels based on backfilled veg (includes stand age)
   - `"VEGHFAGEclass"`: current veg + HF labels (includes stand age)
   - `"SOILclass"`: reference soil classes
