@@ -11,16 +11,108 @@ Keep files in the folder in the same folder.
 
 ## Usage
 
-### Interactive use with R GUI
+### Interactive use with R GUI or RStudio
 
-Open R GUI, set work directory to the `/veghf` folder,
-edit the top section in the `index.R` file (settings are explained below).
-
-### Interactive use with RStudio
-
-Open the project via the `veghf.Rproj` file, this will set the
+Open R GUI, set work directory to the `/veghf` folder in R GUI.
+Open the project via the `veghf.Rproj` file in RStudio, this will set the
 working directory to point to the `/veghf` folder.
+
 Edit the top section in the `index.R` file (settings are explained below).
+
+However, if your are processing multiple projects, it might make more sense
+to have the project specific file somewhere else, that is calling
+the script in the `/veghf` folder. Here is an example file that you can use
+(these are real ones I used to troubleshoot).
+
+This one run fine: note that I am temporarily resetting the working directory
+to the current location of the `/veghf` folder, then resetting.
+
+``` R
+## 20200130_SC_veghf2017_NWSAR
+FILE       = "s:/GC_eric/FromEric/IC_Reporting_Recovery/NWSAR/20200130_SC_veghf2017_NWSAR.sqlite"
+TABLE      = "SC_NWSAR_project_Summary_Vegetation_HFI_rawdata"
+SUB_COL    = NULL
+SUB_VAL    = ""
+UID_COL    = "Region"
+VEG_COL    = "Vegetation"
+BASE_YR    = 2017
+AREA_COL   = "Shape_Area"
+AREA       = TRUE
+OUTPUT     = NULL
+COMMENTS   = "NWSAR Reporting - veg+hf veg+vhf3by7 // 2020-01-30"
+
+od <- setwd("~/repos/recurring/veghf")
+source("function.R")
+setwd(od)
+```
+
+The script gave me the following output:
+
+```
+VEGHF processing started
+
+Loading packages:
+
+Loading objects ... OK
+
+Loading functions ... OK
+
+Connecting to SQLite database:
+ s:/GC_eric/FromEric/IC_Reporting_Recovery/NWSAR/20200130_SC_veghf2017_NWSAR.sqlite
+
+Found the following tables:
+SC_NWSAR_project_Summary_Vegetation_HFI_rawdata
+
+Loading table:
+ SC_NWSAR_project_Summary_Vegetation_HFI_rawdata
+
+Disconnecting ... OK
+
+Processing long format summaries ... OK
+
+Processing wide format summaries ... OK
+
+Redistributing unknown ages:
+
+current: Central Mixedwood --- OK
+current: Lower Boreal Highlands --- OK
+current: Northern Mixedwood --- OK
+reference: Central Mixedwood --- OK
+reference: Lower Boreal Highlands
+	type: Decid | diff = 0 --- OK
+reference: Northern Mixedwood --- OK
+
+
+Saving results:
+ s:/GC_eric/FromEric/IC_Reporting_Recovery/NWSAR/20200130_SC_veghf2017_NWSAR_2020-02-04.RData
+
+DONE
+```
+
+If you run into any issues, read the error message, use `traceback()`, etc.
+
+This second one was more problematic, so I had to expose more control
+and add new HF feature type to the lookup table (if this ever happens,
+please PR the repo so we all have the same lookup table):
+
+``` R
+## 20200130_SC_veghf3by7_2017_NWSAR
+FILE       = "s:/GC_eric/FromEric/IC_Reporting_Recovery/NWSAR/20200130_SC_veghf3by7_2017_NWSAR.sqlite"
+TABLE      = "SC_NWSAR_project_Summary_Vegetation_VHF3by7_rawdata"
+SUB_COL    = NULL
+SUB_VAL    = ""
+UID_COL    = "Region"
+VEG_COL    = "Vegetation"
+BASE_YR    = 2017
+AREA_COL   = "Area_m2"
+AREA       = TRUE
+OUTPUT     = NULL
+COMMENTS   = "NWSAR Reporting - veg+hf veg+vhf3by7 // 2020-01-30"
+
+od <- setwd("~/repos/recurring/veghf")
+source("function.R")
+setwd(od)
+```
 
 ### Non-interactive use
 
