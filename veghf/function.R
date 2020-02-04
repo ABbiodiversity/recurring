@@ -312,6 +312,10 @@ HF_fine=TRUE, widen_only=FALSE) {
     ## soils (`current`, soil + HF)
     SoilCr <- Xtab(Shape_Area ~ LABEL + SOILHFclass, d)
 
+    ## removing unknown aged forest harvest
+    sum(VegCr[,startsWith(colnames(VegCr), "CC") & endsWith(colnames(VegCr), "0")])
+    VegCr <- VegCr[,!(startsWith(colnames(VegCr), "CC") & endsWith(colnames(VegCr), "0"))]
+
     if (!all(colnames(VegRf) %in% RfLab)) {
         cat(colnames(VegRf)[!(colnames(VegRf) %in% RfLab)], sep="\n")
         stop("Unexpected VegRf label")
