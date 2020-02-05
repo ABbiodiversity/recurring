@@ -40,7 +40,7 @@ hflt <- hfgroups[match(hftypes$HF_GROUP_COMB, hfgroups$HF_GROUP_COMB),]
 rownames(hflt) <- hftypes$FEATURE_TY
 
 ## age distribution by NR, NSR
-load("ages-by-nsr.Rdata")
+load("ages-by-nsr.RData")
 
 ## functions
 cat("OK\n\nLoading functions ... ")
