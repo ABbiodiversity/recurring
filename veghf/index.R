@@ -58,4 +58,3 @@ if (interactive()) {
   source(commandArgs(trailingOnly = TRUE)[1L])
 }
 source("function.R")
-

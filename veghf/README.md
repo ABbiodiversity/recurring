@@ -181,6 +181,37 @@ Rscript --vanilla index.R settings.R
   tolerance level for excluding unknown aged harvest areas:
   0 means no tolerance, 1 means it is OK to exlude all the landbase.
 
+### Advanced use
+
+If you need more control, use the following steps instead of
+`source("function.R")`:
+
+``` R
+source("00-setup.R")
+source("01-data.R")
+source("02-long.R")
+source("03-wide.R")
+source("04-save.R")
+```
+
+Feel free to inser additional processing steps between the steps.
+For example, we want to modify the UID and save multiple subsets of the data
+(e.g. by years):
+
+``` R
+source("00-setup.R")
+source("01-data.R")
+
+table(d$year_3by7)
+d$UID <- paste0(d$Region, "_", d$year_3by7)
+UID_COL    = "UID"
+
+source("02-long.R")
+source("03-wide.R")
+source("04-save.R")
+```
+
+
 ## Output
 
 The output file is a binary RData file that can be loaded into using R as:
