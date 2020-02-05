@@ -3,7 +3,7 @@ if (endsWith(tolower(FILE), ".csv")) {
   cat("Reading CSV file:\n", FILE, "... ")
   d <- read.csv(FILE)
 } else {
-  cat("OK\n\nConnecting to SQLite database:\n", FILE)
+  cat("Connecting to SQLite database:\n", FILE)
   db <- dbConnect(RSQLite::SQLite(), FILE)
   cat("\n\nFound the following tables:\n")
   cat(paste(dbListTables(db), collapse="\n"))
