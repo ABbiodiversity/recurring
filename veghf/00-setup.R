@@ -396,7 +396,7 @@ fill_in_0ages_v6 <- function(x, NSR, ages_list, rm0=TRUE) {
             cat("\n\ttype:", i, "| diff =", round((sum(Mat0)-sum(Mat))/10^6))
         }
       }
-      cat(" --- OK\n")
+      cat(" ... OK\n")
     }
     if (current) {
       x$veg_current <- as(xx, "dgCMatrix")
