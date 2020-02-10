@@ -22,5 +22,5 @@ if (is.null(OUTPUT)) {
 
 ## save output
 cat("Saving results:\n", OUTPUT)
-save(d_long, d_wide, .veghf_settings, file=OUTPUT)
+save(list=c("d_long", "d_wide", SAVE), .veghf_settings, file=OUTPUT)
 cat("\n\nDONE\n\n")

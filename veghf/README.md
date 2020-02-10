@@ -159,14 +159,14 @@ Rscript --vanilla index.R settings.R
   ignored for csv files
 * `SUB_COL`:
   optional, field name to be used for subsetting
-  can be NULL (ignored)
+  can be `NULL` (ignored)
 * `SUB_VAL`:
   values in the <SUB_COL> field to keep
   can be a single value or a character vector
 * `OUTPUT`:
   optional, the name of the output file
   it can contain path as well (e.g. /dir/file.RData)
-  if NULL, <FILE>_YYYY-MM-DD.RData is used
+  if `NULL`, `<FILE>_YYYY-MM-DD.RData` is used
 * `AREA`:
   keep as TRUE when a Shape_Area field is present
   (long and wide format summaries can be calculated)
@@ -180,6 +180,8 @@ Rscript --vanilla index.R settings.R
 * `TOL`:
   tolerance level for excluding unknown aged harvest areas:
   0 means no tolerance, 1 means it is OK to exlude all the landbase.
+* `SAVE`:
+  optional, object names to save as character vector or `NULL`
 
 ### Advanced use
 

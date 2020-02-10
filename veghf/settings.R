@@ -50,3 +50,6 @@ COMMENTS   = ""
 ## tolerance level for excluding unknown aged harvest areas
 ## 0 means no tolerance, 1 means it is OK to exlude all the landbase
 TOL        = 0
+
+## optional, object names to save as character vector or NULL
+SAVE       = NULL
