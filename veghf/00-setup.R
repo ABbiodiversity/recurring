@@ -91,9 +91,9 @@ HF_fine=TRUE, widen_only=FALSE, tol=0) {
         c("0","R","1","2","3","4","5","6","7","8","9")),
         NontreedClasses)
     ## use necessary CC-forest classes once evaluated
-    CrOnlyLab <- c(HFLab,
-        paste0("CC", paste0(rep(TreedClassesCC, each=5),
-        c("R","1","2","3","4"))))
+    CCOnlyLab <- paste0("CC", paste0(rep(TreedClassesCC, each=5),
+        c("R","1","2","3","4")))
+    CrOnlyLab <- c(HFLab, CCOnlyLab)
     HLEVS <- c(TreedClasses, NontreedClasses)
     AllLabels <- c(RfLab, CrOnlyLab)
 
@@ -313,13 +313,15 @@ HF_fine=TRUE, widen_only=FALSE, tol=0) {
     SoilCr <- Xtab(Shape_Area ~ LABEL + SOILHFclass, d)
 
     ## removing unknown aged forest harvest within tolerance level
-    if (TOL > 0) {
-      CC0 <- sum(VegCr[,startsWith(colnames(VegCr), "CC") & endsWith(colnames(VegCr), "0")])
+    if (tol > 0) {
+      #CC0 <- sum(VegCr[,startsWith(colnames(VegCr), "CC") & endsWith(colnames(VegCr), "0")])
+      ISSUECOL <- startsWith(colnames(VegCr), "CC") & !(colnames(VegCr) %in% CCOnlyLab)
+      CC0 <- sum(VegCr[,ISSUECOL])
       CC0 <- CC0 / sum(VegCr)
       if (CC0 > 0)
-        cat("Unknown age CC found: ", round(100*CC0,4), "%\n", sep="")
+        cat("Unknown age or non merchentable CC found: ", round(100*CC0,4), "%\n", sep="")
       if (CC0 <= tol)
-        VegCr <- VegCr[,!(startsWith(colnames(VegCr), "CC") & endsWith(colnames(VegCr), "0"))]
+        VegCr <- VegCr[,!ISSUECOL]
     }
 
     if (!all(colnames(VegRf) %in% RfLab)) {
