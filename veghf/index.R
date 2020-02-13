@@ -57,6 +57,9 @@ if (interactive()) {
   ## optional, object names to save as character vector or NULL
   SAVE       = NULL
 
+  ## wether to unround rounded origin year values pre-2000
+  UNROUND    = FALSE
+
 } else {
   source(commandArgs(trailingOnly = TRUE)[1L])
 }

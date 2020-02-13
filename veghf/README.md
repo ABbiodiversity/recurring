@@ -41,6 +41,8 @@ AREA       = TRUE
 OUTPUT     = NULL
 COMMENTS   = "NWSAR Reporting - veg+hf veg+vhf3by7 // 2020-01-30"
 TOL        = 0
+UNROUND    = FALSE
+SAVE       = NULL
 
 od <- setwd("~/repos/recurring/veghf")
 source("function.R")
@@ -109,6 +111,8 @@ AREA_COL   = "Shape_Area"
 AREA       = TRUE
 OUTPUT     = NULL
 TOL        = 0
+UNROUND    = FALSE
+SAVE       = NULL
 
 TABLES <- c("SC_Caribou_Range_Vegetation_HFI2017_rawdata",
   "SC_LAND_USE_FRAMEWORK_Vegetation_HFI2017_rawdata",
@@ -182,6 +186,8 @@ Rscript --vanilla index.R settings.R
   0 means no tolerance, 1 means it is OK to exlude all the landbase.
 * `SAVE`:
   optional, object names to save as character vector or `NULL`
+* `UNROUND`:
+  wether to unround rounded origin year values pre-2000
 
 ### Advanced use
 

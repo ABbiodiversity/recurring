@@ -16,7 +16,10 @@ if (is.null(OUTPUT)) {
     SUB_VAL=SUB_VAL,
     OUTPUT=OUTPUT,
     AREA=AREA,
-    COMMENTS=COMMENTS),
+    COMMENTS=COMMENTS,
+    TOL=TOL,
+    SAVE=SAVE,
+    UNROUND=UNROUND),
   session=list(date=Sys.time(), info=sessionInfo())
 )
 

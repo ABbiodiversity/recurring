@@ -56,11 +56,22 @@ make_char2fact <- function(x) {
         x
 }
 
+## function to address origin year rounding in a reproducible manner
+age_unround <- function(y) {
+    v <- 1:10*10
+    j <- c(-4L, 3L, 4L, 2L, -3L, 5L, 0L, -1L, 1L, -2L)
+    for (i in 1:10) {
+        s <- !is.na(y) & y %% v[i] == 0
+        y[s] <- y[s] + j[i]
+    }
+    y
+}
+
 ## this function processes the input data
 make_vegHF_wide_v6 <-
 function(d, col.label, col.year=NULL, col.HFyear=NULL,
 col.HABIT=NULL, col.SOIL=NULL, wide=TRUE, sparse=FALSE,
-HF_fine=TRUE, widen_only=FALSE, tol=0) {
+HF_fine=TRUE, widen_only=FALSE, tol=0, unround=FALSE) {
 
     TreedClassesCC <- c("Decid", "Mixedwood", "Pine", "Spruce")
     TreedClasses   <- c(TreedClassesCC, "TreedBog", "TreedFen", "TreedSwamp")
@@ -135,6 +146,8 @@ HF_fine=TRUE, widen_only=FALSE, tol=0) {
         levels(d$FEATURE_TY) <- toupper(levels(d$FEATURE_TY))
 
         d$ORIGIN_YEAR <- d$Origin_Year
+        if (unround)
+          d$ORIGIN_YEAR[d$ORIGIN_YEAR < 2000] <- age_unround(d$ORIGIN_YEAR[d$ORIGIN_YEAR < 2000])
 
         #### Footprint classes:
         ## check if we have all the feature types in the lookup table
@@ -414,4 +427,5 @@ fill_in_0ages_v6 <- function(x, NSR, ages_list, rm0=TRUE) {
   }
   x
 }
+
 cat("OK\n\n")
