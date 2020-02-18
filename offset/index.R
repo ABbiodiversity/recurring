@@ -1,5 +1,4 @@
-## offsets, works only in AB
-## to extend beyon AP, need time zone tweaks + TREE/LCC layers
+## offsets
 
 if (!requireNamespace("QPAD")) {
   if (!requireNamespace("remotes"))
