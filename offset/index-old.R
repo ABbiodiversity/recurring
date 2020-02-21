@@ -253,15 +253,27 @@ plot(tz)
 plot(PROV, col="#aaaaaa", add=TRUE)
 
 
-    rast <- raster(file.path(ROOT, "artifacts", spp, paste0("pred-", spp, "-CAN-SD.tif")))
-    q <- quantile(values(rast), 0.999, na.rm=TRUE)
-    values(rast)[!is.na(values(rast)) & values(rast)>q] <- q
-    jpeg(file.path(ROOT, "artifacts", spp, paste0("pred-", spp, "-CAN-SD.jpg")),
-        height=4000, width=6000, res=300)
-    op <- par(cex.main=3, mfcol=c(1,1), oma=c(0,0,0,0), mar=c(0,0,5,0))
-    plot(rast, col=bluegreen.colors(15), axes=FALSE, legend=TRUE, main=paste(spp, "SD"), box=FALSE)
-    plot(PROV, col="#aaaaaa", add=TRUE)
-    plot(LAKES,col="#aaaaff", border=NA, add=TRUE)
-    plot(BCR, add=TRUE)
-    par(op)
-    dev.off()
+rast <- raster(file.path(ROOT, "artifacts", spp, paste0("pred-", spp, "-CAN-SD.tif")))
+q <- quantile(values(rast), 0.999, na.rm=TRUE)
+values(rast)[!is.na(values(rast)) & values(rast)>q] <- q
+jpeg(file.path(ROOT, "artifacts", spp, paste0("pred-", spp, "-CAN-SD.jpg")),
+    height=4000, width=6000, res=300)
+op <- par(cex.main=3, mfcol=c(1,1), oma=c(0,0,0,0), mar=c(0,0,5,0))
+plot(rast, col=bluegreen.colors(15), axes=FALSE, legend=TRUE, main=paste(spp, "SD"), box=FALSE)
+plot(PROV, col="#aaaaaa", add=TRUE)
+plot(LAKES,col="#aaaaff", border=NA, add=TRUE)
+plot(BCR, add=TRUE)
+par(op)
+dev.off()
+
+
+## DSLS
+
+library(raster)
+library(rgdal)
+library(sp)
+library(rgeos)
+
+x=raster("d:/bam/BAM_data_v2019/sg300_01_2010.asc")
+plot(x)
+proj4string(x) <- "+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0"
