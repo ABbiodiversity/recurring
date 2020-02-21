@@ -277,3 +277,15 @@ library(rgeos)
 x=raster("d:/bam/BAM_data_v2019/sg300_01_2010.asc")
 plot(x)
 proj4string(x) <- "+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0"
+
+rtree <- raster("./data/tree.tif")
+crs <- proj4string(rtree)
+
+z <- projectRaster(x, rtree)
+z <- mask(z, rtree)
+z <- trim(z)
+
+values(z) <- round(values(z))
+
+writeRaster(z, file="./data/seedgrow.tif")
+
