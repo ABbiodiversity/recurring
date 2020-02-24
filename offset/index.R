@@ -17,6 +17,7 @@ if (!requireNamespace("intrval"))
 library(QPAD)
 library(maptools)
 library(intrval)
+library(raster)
 
 load_BAM_QPAD(version = 3)
 if (getBAMversion() != "3")
@@ -25,6 +26,7 @@ if (getBAMversion() != "3")
 rlcc <- raster("./data/lcc.tif")
 rtree <- raster("./data/tree.tif")
 rtz <- raster("./data/utcoffset.tif")
+rd1 <- raster("./data/seedgrow.tif")
 crs <- proj4string(rtree)
 
 spp <- "OVEN"
@@ -134,6 +136,8 @@ vtree <- extract(rtree, xy)
 TREE <- vtree / 100
 TREE[TREE %)(% c(0, 1)] <- 0
 
+## extract seedgrow value (this is rounded)
+d1 <- extract(rd1, xy)
 ## UTC offset + 7 makes Alberta 0 (MDT offset)
 tz <- extract(rtz, xy) + 7
 
@@ -149,11 +153,15 @@ sr <- sunriset(cbind("X"=lon, "Y"=lat),
   direction="sunrise", POSIXct.out=FALSE) * 24
 TSSR <- round(unname((hour - sr + tz) / 24), 4)
 
+## days since local spring
+DSLS <- (day - d1) / 365
+
 ## constant for NA cases
 cf0 <- exp(unlist(coefBAMspecies(spp, 0, 0)))
-## best model
-mi <- bestmodelBAMspecies(spp, type="BIC",
-    model.sra=names(getBAMmodellist()$sra)[!grepl("DSLS", getBAMmodellist()$sra)])
+## best model (includes DSLS)
+#mi <- bestmodelBAMspecies(spp, type="BIC",
+#    model.sra=names(getBAMmodellist()$sra)[!grepl("DSLS", getBAMmodellist()$sra)])
+mi <- bestmodelBAMspecies(spp, type="BIC")
 cfi <- coefBAMspecies(spp, mi$sra, mi$edr)
 
 ## make Xp and Xq

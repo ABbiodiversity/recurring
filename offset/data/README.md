@@ -30,3 +30,7 @@ Continuous vegetation cover, tree cover
 ## `utcoffset.tif`
 
 UTC time zone offset relative to Greenwich
+
+## `seedgrow.tif`
+
+First day of local spring (seedgrow).
