@@ -170,7 +170,9 @@ Rscript --vanilla index.R settings.R
 * `OUTPUT`:
   optional, the name of the output file
   it can contain path as well (e.g. /dir/file.RData)
-  if `NULL`, `<FILE>_YYYY-MM-DD.RData` is used
+  if `NULL`, `<FILE>_YYYY-MM-DD.RData` is used, 
+  if `NA`, no output file is produced (i.e. when accumulating 
+  multiple objects in a single file).
 * `AREA`:
   keep as TRUE when a Shape_Area field is present
   (long and wide format summaries can be calculated)

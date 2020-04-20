@@ -24,6 +24,8 @@ if (is.null(OUTPUT)) {
 )
 
 ## save output
-cat("Saving results:\n", OUTPUT)
-save(list=c("d_long", "d_wide", SAVE), .veghf_settings, file=OUTPUT)
+if (!is.na(OUTPUT)) {
+    cat("Saving results:\n", OUTPUT)
+    save(list=c("d_long", "d_wide", SAVE), .veghf_settings, file=OUTPUT)
+}
 cat("\n\nDONE\n\n")
