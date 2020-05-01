@@ -209,3 +209,4 @@ BURROWPITT,BorrowpitsDugoutsSumps,,BorrowpitsDugoutsSumps,,,,3x7verified,"Includ
 CULTIVATION_ABAND,CultivationCropPastureBareground,CultivationAbandoned,CultivationAbandoned,,Use it as Cultivation only?,,3x7verified,"Agricultural land that has been formally seeded and tilled, but no evidence of present day production use. Landscape appears to have a heterogeneous mix of vegetation and closely resembles natural cover."
 HARVEST_AREA,CutBlocks,,CutBlocks,,,,3x7verified,
 TAME-PASTURE,CultivationCropPastureBareground,CultivationTamePasture,CultivationTamePasture,,Use it as Cultivation only?,,3x7verified,Agricultural land that has been cleared of surface vegetation and tilled. Seeded with grass species or alfalfa. Typically used to graze livestock-evidence of livestock may be present; or used for livestock feed production.
+CONVENTIONAL-SEISMIC,SeismicLine,,SeismicLineWide,,,,Offgrid Sites,
