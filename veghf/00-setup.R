@@ -58,14 +58,17 @@ make_char2fact <- function(x) {
 
 ## function to address origin year rounding in a reproducible manner
 age_unround <- function(y) {
-    v <- 1:10*10
     j <- c(-4L, 3L, 4L, 2L, -3L, 5L, 0L, -1L, 1L, -2L)
-    for (i in 1:10) {
-        s <- !is.na(y) & y %% v[i] == 0
-        y[s] <- y[s] + j[i]
-    }
+    s <- y %% 10 == 0
+    yy <- y[s]
+    i <- as.integer(round(10*(yy/100 - floor(yy/100))))
+    i[i == 0L] <- 10L
+    y[s] <- y[s] + j[i]
     y
 }
+#y <- 191:200*10
+#matrix(age_unround(y)-y, 10, 10)
+#data.frame(orig=y, unrounded=age_unround(y))
 
 ## this function processes the input data
 make_vegHF_wide_v6 <-
