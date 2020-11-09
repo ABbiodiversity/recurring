@@ -65,7 +65,9 @@ MIN <- ifelse(nchar(MIN) < 2, paste0("0", MIN), MIN)
 X$TIME <- paste0(HR, ":", MIN)
 
 
-x <- make_x(dt=X$DATE, tm=X$TIME, lon=X$Longitude, lat, dur=3, dis=Inf, key=X$location)
+x <- make_x(dt=X$DATE, tm=X$TIME,
+  lon=X$Longitude, lat=X$Latitude,
+  dur=3, dis=Inf, key=X$location)
 
 OFF <- matrix(0, nrow(x), length(SPP))
 rownames(OFF) <- x$key
@@ -78,5 +80,4 @@ for (spp in SPP) {
 
 OUT <- data.frame(X, x, Offset=OFF)
 write.csv(OUT, row.names=FALSE, file="~/Desktop/OFFSETS-out.csv")
-
 
