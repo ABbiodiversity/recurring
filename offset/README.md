@@ -38,7 +38,7 @@ which will open up the project and set the working directory.
 
 > An example can be found in the [`index.R`](index.R) file.
 
-__Step 1.__ Load required packages and objects:
+### Step 1. Load required packages and objects
 
 ```R
 ## load packages
@@ -63,11 +63,19 @@ crs <- proj4string(rtree)
 source("functions.R")
 ```
 
-__Step 2.__ Define variables for your project. The date/time and coordinate specifications will make sure that required predictors are extracted in the way that match the estimates.
+### Step 2. Define variables for your project
+
+The date/time and coordinate specifications will make sure that required predictors are extracted in the way that match the estimates.
 
 - the species ID need to be a single 4-letter AOU code (see `getBAMspecieslist()` for a full list)
-- date/time/lat/long can be single values or vectors (shorter objects recycled)
-- duration/distance can be single value or vector (recycled as needed)
+- coordinates and time:  can be single values or vectors (shorter objects recycled)
+  - `dt`: date, ISO 8601 in YYYY-MM-DD (0-padded)
+  - `tm`: time, ISO 8601 in hh:mm (24 hr clock, 0-padded)
+  - `lat`: latitude [WGS84 (EPSG: 4326)]
+  - `lon`: longitude [WGS84 (EPSG: 4326)]
+- methods descriptors: can be single value or vector (recycled as needed)
+  - `dur`: duration in minutes
+  - `dis`: distance in meters
 
 ```R
 ## species of interest
@@ -88,7 +96,9 @@ dur <- 10 # minutes
 dis <- 100 # meters
 ```
 
-__Step 3.__ Organize predictors: this can be reused for multiple species:
+### Step 3. Organize predictors
+
+This object can be reused for multiple species:
 
 ```R
 x <- make_x(dt, tm, lon, lat, dur, dis)
@@ -106,7 +116,9 @@ str(x)
 
 NOTE: CRS related warnings are due to [PROJ4 vs PROJ6](https://stackoverflow.com/questions/63727886/proj4-to-proj6-upgrade-and-discarded-datum-warnings) discrepancies when using GDAL > 3 because the `+datum=` part is deprecated.
 
-__Step 4.__ Calculate offsets: A is the known or estimated area of survey, p is availability given presence, q is detectability given avaibalility.
+### Step 4. Calculate offsets
+
+`A` is the known or estimated area of survey, `p` is availability given presence, `q` is detectability given avaibalility.
 
 ```R
 o <- make_off(spp, x)
@@ -119,7 +131,7 @@ str(o)
 ## $ offset    : num 0.559
 ```
 
-NOTE: offset is log(correction), correction = Apq, thus offset=log(A) + log(p) + log(q).
+NOTE: `offset` is `log(correction)`, `correction` = `A*p*q`, thus `offset=log(A) + log(p) + log(q)`.
 
 Use a loop over multiple species:
 
