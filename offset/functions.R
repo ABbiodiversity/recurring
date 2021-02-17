@@ -1,4 +1,6 @@
-make_x <- function(dt, tm, lon, lat, dur, dis, ...) {
+make_x <- function(
+  dt, tm, lon, lat, dur, dis, ...,
+  check_xy=TRUE) {
   ## checking lengths
   nn <- c(dt=length(dt), tm=length(tm), lon=length(lon), lat=length(lat), dur=length(dur), dis=length(dis))
   n1 <- nn[nn == 1L]
@@ -42,8 +44,10 @@ make_x <- function(dt, tm, lon, lat, dur, dis, ...) {
   #         min       max
   #x -163.89547 -52.66936
   #y   39.66214  68.98741
-  checkfun(lon, "lon", c(-163.89547, -52.66936))
-  checkfun(lat, "lat", c(39.66214, 68.98741))
+  if (check_xy) {
+    checkfun(lon, "lon", c(-164, -52))
+    checkfun(lat, "lat", c(39, 69))
+  }
   checkfun(day, "day", c(0, 360))
   checkfun(hour, "hour", c(0, 24))
   checkfun(dur, "dur", c(0, Inf))
@@ -52,9 +56,13 @@ make_x <- function(dt, tm, lon, lat, dur, dis, ...) {
     stop("Parameter lon must be finite")
   if (any(is.infinite(lat)))
     stop("Parameter lat must be finite")
+  ## handling missing values
+  ok_xy <- !is.na(lon) & !is.na(lat)
 
   ## intersect here
   xy <- data.frame(x=lon, y=lat)
+  xy$x[is.na(xy$x)] <- mean(xy$x, na.rm=TRUE)
+  xy$y[is.na(xy$y)] <- mean(xy$y, na.rm=TRUE)
   coordinates(xy) <- ~ x + y
   proj4string(xy) <- "+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0"
   xy <- spTransform(xy, crs)
@@ -102,7 +110,9 @@ make_x <- function(dt, tm, lon, lat, dur, dis, ...) {
   MAXDUR <- round(dur, 4)
 
   ## sunrise time adjusted by offset
-  sr <- sunriset(cbind("X"=lon, "Y"=lat),
+  ok_dt <- !is.na(dtm)
+  dtm[is.na(dtm)] <- mean(dtm, na.rm=TRUE)
+  sr <- sunriset(cbind("X"=xy$x, "Y"=xy$y),
     as.POSIXct(dtm, tz="America/Edmonton"),
     direction="sunrise", POSIXct.out=FALSE) * 24
   TSSR <- round(unname((hour - sr + tz) / 24), 4)
@@ -110,7 +120,7 @@ make_x <- function(dt, tm, lon, lat, dur, dis, ...) {
   ## days since local spring
   DSLS <- (day - d1) / 365
 
-  data.frame(
+  out <- data.frame(
     TSSR=TSSR,
     JDAY=JDAY,
     DSLS=DSLS,
@@ -119,8 +129,13 @@ make_x <- function(dt, tm, lon, lat, dur, dis, ...) {
     TREE=TREE,
     MAXDUR=MAXDUR,
     MAXDIS=MAXDIS,
-    ...
-  )
+    ...)
+  out$TSSR[!ok_xy | !ok_dt] <- NA
+  out$DSLS[!ok_xy] <- NA
+  out$LCC2[!ok_xy] <- NA
+  out$LCC4[!ok_xy] <- NA
+  out$TREE[!ok_xy] <- NA
+  out
 }
 
 
