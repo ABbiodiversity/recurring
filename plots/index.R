@@ -61,7 +61,7 @@ boxplot(b$stats[3,] ~ as.factor(b$names), add=TRUE,
 #'
 #' ## Wrapping it up in a function
 #'
-beeplot <- function(x, y,
+beesbox <- function(x, y,
   bw=0.4, sw=0.3,
   xlab="", ylab="Value", main="", col=NULL, ...) {
 
@@ -92,7 +92,7 @@ beeplot <- function(x, y,
   invisible(a)
 }
 #' Test of the pudding
-beeplot(x$group, x$value, ylim=c(40, 60), ylab="Intactness",
+beesbox(x$group, x$value, ylim=c(40, 60), ylab="Intactness",
         col=hcl.colors(length(unique(x$group)), "Dark 2"))
 abline(h=50)
 
