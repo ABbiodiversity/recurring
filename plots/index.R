@@ -61,17 +61,27 @@ boxplot(b$stats[3,] ~ as.factor(b$names), add=TRUE,
 #'
 #' ## Wrapping it up in a function
 #'
+#' - x: group
+#' - y: values
+#' - bw: width for the box
+#' - bs: width for the swarm
+#' - ba: alpha level for the box
+#' - sa: alpha level for the points and the median line
+#' - others are graphical params
 beesbox <- function(x, y,
   bw=0.4, sw=0.3,
+  ba=0.33, sa=0.66,
   xlab="", ylab="Value", main="", col=NULL, ...) {
 
   x <- data.frame(group=as.factor(x), value=y)
   m <- length(unique(x$group))
   if (is.null(col))
     col <- hcl.colors(m, "Pastel 1")
+  a1 <- substr(hcl.colors(m, "Pastel 1", alpha=ba), 8, 9)
+  a2 <- substr(hcl.colors(m, "Pastel 1", alpha=sa), 8, 9)
   col0 <- substr(col, 1, 7)
-  col1 <- paste0(col0, "44")
-  col2 <- paste0(col0, "88")
+  col1 <- paste0(col0, a1)
+  col2 <- paste0(col0, a2)
   b <- boxplot(value ~ group, x, range=0,
           col=col1, border=NA,
           pars=list(boxwex = 2*bw),
@@ -85,7 +95,7 @@ beesbox <- function(x, y,
     a$x[a$x.orig == g[i]] <- i+sw*(a$x[a$x.orig == g[i]]-i) /
       max(abs(a$x[a$x.orig == g[i]]-i))
   }
-  a$col <- col0[match(a$x.orig, g)]
+  a$col <- col2[match(a$x.orig, g)]
   points(a$x, a$y, cex=0.5, pch=19, col=a$col)
   axis(2)
   axis(1, seq_along(g), g, lwd=0)
