@@ -112,7 +112,7 @@ make_x <- function(
   ## sunrise time adjusted by offset
   ok_dt <- !is.na(dtm)
   dtm[is.na(dtm)] <- mean(dtm, na.rm=TRUE)
-  sr <- sunriset(cbind("X"=xy$x, "Y"=xy$y),
+  sr <- sunriset(cbind("X"=lon, "Y"=lat),
     as.POSIXct(dtm, tz="America/Edmonton"),
     direction="sunrise", POSIXct.out=FALSE) * 24
   TSSR <- round(unname((hour - sr + tz) / 24), 4)
